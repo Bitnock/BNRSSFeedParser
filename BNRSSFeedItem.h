@@ -10,7 +10,9 @@
 
 @class BNRSSFeedItemEnclosure;
 
-@interface BNRSSFeedItem : NSDictionary
+@interface BNRSSFeedItem : NSDictionary {
+  NSDictionary* _collection;
+}
 
 @property (nonatomic, strong, readonly) NSString* title;
 @property (nonatomic, strong, readonly) NSString* description;

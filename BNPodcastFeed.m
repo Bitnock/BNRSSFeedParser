@@ -17,26 +17,66 @@
 
 @implementation BNPodcastFeed
 
+#pragma mark - BNRSSFeed
+
 - (NSArray*)items {
-  if (self.channel && self.channel[@"item"] && !_items) {
-    NSArray* __items;
+  if (!_items) {
+    NSMutableArray* __items = [NSMutableArray arrayWithCapacity:super.items.count];
     
-    if ([self.channel[@"item"] isKindOfClass:NSArray.class]) {
-      __items = self.channel[@"item"];
-    } else if ([self.channel[@"item"] isKindOfClass:NSString.class]) {
-      __items = @[ self.channel[@"item"] ];
+    for (BNRSSFeedItem* item in super.items) {
+      [__items addObject:[[BNPodcastFeedItem alloc] initWithObjects:item.allValues forKeys:item.allKeys]];
     }
     
-    NSMutableArray* feedItems = [NSMutableArray arrayWithCapacity:__items.count];
-    
-    for (NSDictionary* itemDict in __items) {
-      [feedItems addObject:[[BNPodcastFeedItem alloc] initWithObjects:itemDict.allValues forKeys:itemDict.allKeys]];
-    }
-    
-    _items = feedItems.copy;
+    _items = __items.copy;
   }
   
   return _items;
+}
+
+#pragma mark - iTunes extensions
+
+- (NSString*)itunesAuthor {
+  NSString* attr;
+  
+  if (self.channel && self.channel[@"itunes:author"] && [self.channel[@"itunes:author"] isKindOfClass:NSString.class]) {
+    attr = self.channel[@"itunes:author"];
+  }
+  
+  return attr;
+}
+
+- (NSString*)itunesSubtitle {
+  NSString* attr;
+  
+  if (self.channel && self.channel[@"itunes:subtitle"] && [self.channel[@"itunes:subtitle"] isKindOfClass:NSString.class]) {
+    attr = self.channel[@"itunes:subtitle"];
+  }
+  
+  return attr;
+}
+
+- (NSString*)itunesSummary {
+  NSString* attr;
+  
+  if (self.channel && self.channel[@"itunes:summary"] && [self.channel[@"itunes:summary"] isKindOfClass:NSString.class]) {
+    attr = self.channel[@"itunes:summary"];
+  }
+  
+  return attr;
+}
+
+#pragma mark Helpers
+
+- (NSString*)author {
+  return self.itunesAuthor;
+}
+
+- (NSString*)subtitle {
+  return self.itunesSubtitle;
+}
+
+- (NSString*)summary {
+  return self.itunesSummary;
 }
 
 @end

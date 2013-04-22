@@ -11,10 +11,12 @@
 @interface BNPodcastFeed : BNRSSFeed
 
 @property (nonatomic, strong, readonly) NSString* itunesAuthor;
+//@property (nonatomic, strong, readonly) NSString* itunesExplicit;
 @property (nonatomic, strong, readonly) NSString* itunesSubtitle;
-@property (nonatomic, strong, readonly) NSString* itunesExplicit;
+@property (nonatomic, strong, readonly) NSString* itunesSummary;
 
+@property (nonatomic, strong, readonly) NSString* author;
 @property (nonatomic, strong, readonly) NSString* subtitle;
-@property (nonatomic, readonly) BOOL isExplicit;
+@property (nonatomic, strong, readonly) NSString* summary;
 
 @end

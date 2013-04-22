@@ -1,22 +1,19 @@
 //
-//  BNRSSFeedParser.m
+//  BNPodcastFeedParser.m
 //  Kerto
 //
-//  Created by Christopher Kalafarski on 3/30/13.
+//  Created by Christopher Kalafarski on 4/2/13.
 //  Copyright (c) 2013 Bitnock. All rights reserved.
 //
 
-#import "BNRSSFeedParser.h"
+#import "BNPodcastFeedParser.h"
 #import "BNPodcastFeed.h"
-
-#import "BNRSSFeedItem.h"
-#import "BNRSSFeedItemEnclosure.h"
 
 #import "AFXMLRequestOperation.h"
 
-NSString *const kXMLReaderTextNodeKey = @"_text";
+NSString *const kXMLReaderTextNodeKey2 = @"_text";
 
-@interface BNRSSFeedParser () {
+@interface BNPodcastFeedParser () {
   NSMutableArray* _parsedElementStack;
   NSMutableString* _currentElementCharacters;
   NSDate* _abortAtPubDate;
@@ -24,12 +21,12 @@ NSString *const kXMLReaderTextNodeKey = @"_text";
 
 @property (nonatomic, strong) NSHTTPURLResponse* operationResponse;
 
-@property (nonatomic, copy) void (^successBlock)(NSHTTPURLResponse*, BNRSSFeed*);
+@property (nonatomic, copy) void (^successBlock)(NSHTTPURLResponse*, BNPodcastFeed*);
 @property (nonatomic, copy) void (^failureBlock)(NSHTTPURLResponse*, NSError*);
 
 @end
 
-@implementation BNRSSFeedParser
+@implementation BNPodcastFeedParser
 
 static NSDateFormatter* dateFormatter = nil;
 static NSDateFormatter* dateFormatterAlt = nil;
@@ -50,7 +47,7 @@ static NSDateFormatter* dateFormatterAlt = nil;
   [AFXMLRequestOperation addAcceptableContentTypes:[NSSet setWithObject:@"application/rss+xml"]];
 }
 
-- (id)initWithFeedURL:(NSURL*)feedURL withETag:(NSString*)feedETag untilPubDate:(NSDate*)pubDate success:(void (^)(NSHTTPURLResponse*, BNRSSFeed*))success failure:(void (^)(NSHTTPURLResponse*, NSError*))failure {
+- (id)initWithFeedURL:(NSURL*)feedURL withETag:(NSString*)feedETag untilPubDate:(NSDate*)pubDate success:(void (^)(NSHTTPURLResponse*, BNPodcastFeed*))success failure:(void (^)(NSHTTPURLResponse*, NSError*))failure {
   self = [super init];
   if (self) {
     [self parseFeedURL:feedURL withETag:feedETag untilPubDate:pubDate success:success failure:failure];
@@ -58,7 +55,7 @@ static NSDateFormatter* dateFormatterAlt = nil;
   return self;
 }
 
-- (void)parseFeedURL:(NSURL*)feedURL withETag:(NSString*)feedETag untilPubDate:(NSDate*)pubDate success:(void (^)(NSHTTPURLResponse*, BNRSSFeed*))success failure:(void (^)(NSHTTPURLResponse*, NSError*))failure {
+- (void)parseFeedURL:(NSURL*)feedURL withETag:(NSString*)feedETag untilPubDate:(NSDate*)pubDate success:(void (^)(NSHTTPURLResponse*, BNPodcastFeed*))success failure:(void (^)(NSHTTPURLResponse*, NSError*))failure {
   NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:feedURL];
   request.cachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
   [request setValue:feedETag forHTTPHeaderField:@"If-None-Match"];
@@ -88,7 +85,7 @@ static NSDateFormatter* dateFormatterAlt = nil;
 }
 
 - (void)parser:(NSXMLParser*)parser didStartElement:(NSString*)elementName namespaceURI:(NSString*)namespaceURI qualifiedName:(NSString*)qualifiedName attributes:(NSDictionary*)attributeDict {
-
+  
   NSMutableDictionary* parentElementDict = _parsedElementStack.lastObject;
   
   // Create the child dictionary for the new element, and initilaize it with the attributes
@@ -128,7 +125,8 @@ static NSDateFormatter* dateFormatterAlt = nil;
   
   NSString* characters = [_currentElementCharacters stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
   
-  if ([elementName isEqualToString:@"pubDate"]) {
+  // Ignoring pubDate on Channel for now...
+  if ([elementName isEqualToString:@"pubDate"] && _parsedElementStack.count > 4) {
     NSDate* pubDate = [dateFormatter dateFromString:characters];
     
     if (!pubDate) {
@@ -147,7 +145,7 @@ static NSDateFormatter* dateFormatterAlt = nil;
           NSMutableArray* _item = (NSMutableArray*)item;
           [_item removeLastObject];
         }
-
+        
         [parser abortParsing];
         [self parserDidEndDocument:parser];
       }
@@ -160,7 +158,7 @@ static NSDateFormatter* dateFormatterAlt = nil;
       
       parentDict[elementName] = characters;
     } else {
-      [currentElementDict setObject:characters forKey:kXMLReaderTextNodeKey];
+      [currentElementDict setObject:characters forKey:kXMLReaderTextNodeKey2];
     }
     
     _currentElementCharacters = NSMutableString.string;
@@ -183,12 +181,12 @@ static NSDateFormatter* dateFormatterAlt = nil;
 
 #pragma mark - Feed constructor
 
-- (BNRSSFeed*)feed {
-  BNRSSFeed* rssFeed;
+- (BNPodcastFeed*)feed {
+  BNPodcastFeed* rssFeed;
   
   if (_parsedElementStack.count > 0) {
     NSDictionary* feedDict = _parsedElementStack[0];
-    rssFeed = [[BNRSSFeed alloc] initWithObjects:feedDict.allValues forKeys:feedDict.allKeys];
+    rssFeed = [[BNPodcastFeed alloc] initWithObjects:feedDict.allValues forKeys:feedDict.allKeys];
   }
   
   return rssFeed;

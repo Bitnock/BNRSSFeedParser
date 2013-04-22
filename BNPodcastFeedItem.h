@@ -10,6 +10,14 @@
 
 @interface BNPodcastFeedItem : BNRSSFeedItem
 
+@property (nonatomic, strong, readonly) NSString* itunesAuthor;
+@property (nonatomic, strong, readonly) NSString* itunesSubtitle;
+@property (nonatomic, strong, readonly) NSString* itunesSummary;
+@property (nonatomic, strong, readonly) NSString* itunesDuration;
+
+@property (nonatomic, strong, readonly) NSString* author;
+@property (nonatomic, strong, readonly) NSString* subtitle;
+@property (nonatomic, strong, readonly) NSString* summary;
 @property (nonatomic, readonly) NSTimeInterval duration;
 
 @end
