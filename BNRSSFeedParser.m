@@ -32,7 +32,7 @@
 
 #import "AFXMLRequestOperation.h"
 
-NSString *const kXMLReaderTextNodeKey = @"_text";
+NSString *const kXMLReaderTextNodeKey = @"__text__";
 
 @interface BNRSSFeedParser () {
   NSMutableArray* _parsedElementStack;
