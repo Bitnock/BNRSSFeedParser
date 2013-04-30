@@ -146,7 +146,7 @@ static NSDateFormatter* dateFormatterAlt = nil;
   
   NSString* characters = [_currentElementCharacters stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
   
-  if ([elementName isEqualToString:@"pubDate"]) {
+  if ([elementName isEqualToString:@"pubDate"] && _parsedElementStack.count > 4) {
     NSDate* pubDate = [dateFormatter dateFromString:characters];
     
     if (!pubDate) {
