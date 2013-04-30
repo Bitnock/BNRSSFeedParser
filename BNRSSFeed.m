@@ -187,7 +187,7 @@
     
     if ([self.channel[@"item"] isKindOfClass:NSArray.class]) {
       __items = self.channel[@"item"];
-    } else if ([self.channel[@"item"] isKindOfClass:NSString.class]) {
+    } else if ([self.channel[@"item"] isKindOfClass:NSDictionary.class]) {
       __items = @[ self.channel[@"item"] ];
     }
     
