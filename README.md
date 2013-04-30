@@ -18,15 +18,15 @@ If an ETag is provided, it will be assigned to the `NSURLRequest` that is used t
 
 The failure block will also be called should parsing fail for any other reason.
 
-If a `pubDate` is provided, as item elements of the RSS feed are parsed, their pubDates will be compared to the provided `pubDate`, and parsing will stop. This happens sequentially, in the order that items appear in the feed; it is meant to improve speed an efficiency, so if items are out of order in the feed, the parser may not find them. Neither the parser nor the feed will know how many (if any) items were not parsed.
+If a `pubDate` is provided, as item elements of the RSS feed are parsed, their pubDates will be compared to the provided `pubDate`, and parsing will stop when an item is at or before the provided `pubDate`. This happens sequentially, in the order that items appear in the feed; it is meant to improve speed and efficiency, so if items are out of order in the feed, the parser may not find them. Neither the parser nor the feed will know how many (if any) items were not parsed.
 
-Because of the frequency that feed pubDates (ie, the pubDate element that is a child of the channel element) are inaccurate, they are ***ignored***. This prevents the parser from bailing early if the feed pubDate is not in sync (eg, is earlier) than the most recent feed item.
+Because of the frequency that feed pubDates (ie, the pubDate element that is a child of the channel element) are inaccurate, they are ***ignored***. This prevents the parser from bailing early if the feed pubDate is not in sync (i.e. is earlier) than the most recent feed item.
 
-The parser will, essentially, construct an `NSDictionary` from the RSS feed, with very little validation. All elements, attributes, and text nodes will be carried over to the dictionary in the most sensible way available. If an element contains only a text node, the value for that element's key in the dictionary will be an `NSString` of the text. If the element also (or only) contains child elements, the value will be an `NSDictionary`; the text node will have a key of `@"__text__"`.
+The parser will, essentially, construct an `NSDictionary` from the RSS feed, with very little validation. All elements, attributes, and text nodes will be carried over to the dictionary in the most sensible way possible. If an element contains only a text node, the value for that element's key in the dictionary will be an `NSString` of the text. If the element also (or only) contains child elements, the value will be an `NSDictionary`; the text node will have a key of `@"__text__"`.
 
 XML element attributes are also mapped to keys in the resulting `NSDictionary` objects.
 
-When homographic siblings (e.g. multiple `<item>` elements) are present, they are put into an `NSArray`. The key for the array in its containing dictionary is the name of the elements; it is not pluralized. In no cases will the parser assume an element is part of a set. I.e. a feed with a single item element will *not* have an array with a single item.
+When homographic siblings (e.g. multiple `<item>` elements) are present, they are put into an `NSArray`. The key for the array in its containing dictionary is the name of the elements; it is not pluralized. In no cases will the parser assume an element is part of a set. I.e. a feed with a single item element will *not* have an array with a single item; it will simply have a dictionary.
 
 This dictionary is converted to a `BNRSSFeed` (or `BNPodcastFeed`) object before it is passed to the `success` block of `parseFeedURL:`
 
@@ -53,6 +53,10 @@ The enclosure property of a `BNRSSFeed` object returns a `BNRSSFeedItemEnclosure
 #### BNRSSFeedItemEnclosure
 
 An 'NSDictionary' subclass that has property for `url`, `length`, and `type`.
+
+### Podcasts
+
+The podcast subclasses simply provide more specific interfaces for some properties that do no exist for general RSS feeds. These include iTunes-specific elements. Not all podcast related properties are included yet.
 
 ### Caveats
 
