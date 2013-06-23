@@ -1,7 +1,5 @@
 ## BNRSSFeedParser
 
-BNDownload depends on AFNetworking
-
 #### How to use
 
 BNRSSFeedParser (and its BNPodcastFeedParser) is a one-stop shop for handling HTTP RSS resources. The parsing is quite simplistic, and does not necessarily care too much about the RSS spec. The interface for the objects that are generated try their best to adhere to the standards for their formats.

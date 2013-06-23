@@ -30,7 +30,7 @@
 #import "BNRSSFeedItem.h"
 #import "BNRSSFeedItemEnclosure.h"
 
-#import "AFXMLRequestOperation.h"
+#import "BNRSSFeedURLSessionManager.h"
 
 NSString *const kXMLReaderTextNodeKey = @"__text__";
 
@@ -64,8 +64,6 @@ static NSDateFormatter* dateFormatterAlt = nil;
     dateFormatterAlt.dateFormat = @"EEE, dd MMM yyyy HH:mm:ss zzz";
     // ex. Tue, 02 Oct 2012 19:56:51 EDT
   }
-  
-  [AFXMLRequestOperation addAcceptableContentTypes:[NSSet setWithObject:@"application/rss+xml"]];
 }
 
 - (id)initWithFeedURL:(NSURL*)feedURL withETag:(NSString*)feedETag untilPubDate:(NSDate*)pubDate success:(void (^)(NSHTTPURLResponse*, BNRSSFeed*))success failure:(void (^)(NSHTTPURLResponse*, NSError*))failure {
@@ -78,24 +76,29 @@ static NSDateFormatter* dateFormatterAlt = nil;
 
 - (void)parseFeedURL:(NSURL*)feedURL withETag:(NSString*)feedETag untilPubDate:(NSDate*)pubDate success:(void (^)(NSHTTPURLResponse*, BNRSSFeed*))success failure:(void (^)(NSHTTPURLResponse*, NSError*))failure {
   NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:feedURL];
-  request.cachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
   [request setValue:feedETag forHTTPHeaderField:@"If-None-Match"];
   
   _abortAtPubDate = pubDate;
-  
-  AFXMLRequestOperation* operation = [AFXMLRequestOperation XMLParserRequestOperationWithRequest:request success:^(NSURLRequest* request, NSHTTPURLResponse* response, NSXMLParser* XMLParser) {
-    self.operationResponse = response;
-    self.successBlock = success;
-    
-    XMLParser.delegate = self;
-    [XMLParser parse];
-  } failure:^(NSURLRequest* request, NSHTTPURLResponse* response, NSError* error, NSXMLParser* XMLParser) {
-    if (failure) {
-      failure(response, error);
+
+  [BNRSSFeedURLSessionManager.sharedManager.session dataTaskWithRequest:request completionHandler:^(NSData* data, NSURLResponse* response, NSError* error) {
+    if ([response isKindOfClass:NSHTTPURLResponse.class]) {
+      self.operationResponse = (NSHTTPURLResponse*)response;
+      
+      if (error && failure) {
+        failure(self.operationResponse, error);
+      } else if (self.operationResponse.statusCode == 304 && success) {
+        failure(self.operationResponse, error);
+      } else if (data) {
+        self.successBlock = success;
+        
+        NSXMLParser* XMLParser = [[NSXMLParser alloc] initWithData:data];
+        XMLParser.delegate = self;
+        [XMLParser parse];
+      } else {
+        failure(self.operationResponse, error);
+      }
     }
   }];
-  
-  [operation start];
 }
 
 #pragma mark - XML parser delegate
