@@ -12,7 +12,7 @@ The feed parser class handles all of the heavy lifting. The `parseFeedURL:` meth
     
 takes the URL of an RSS feed and, optionally, an ETag, a date, and success and failure blocks.
 
-If an ETag is provided, it will be assigned to the `NSURLRequest` that is used to request the RSS data. If it is a match (server returns an HTTP 304), the failure block will be called. You can check the `statusCode` of the `NSHTTPURLResponse` passed to the block to determine if the reason was an ETag match.
+If an ETag is provided, it will be assigned to the `NSURLRequest` that is used to request the RSS data. If it is a match (server returns an HTTP 304), the failure block will be called (no parsing will happen, and no feed will be available from this parser). You can check the `statusCode` of the `NSHTTPURLResponse` passed to the block to determine if the reason was an ETag match.
 
 The failure block will also be called should parsing fail for any other reason.
 
@@ -50,7 +50,7 @@ The enclosure property of a `BNRSSFeed` object returns a `BNRSSFeedItemEnclosure
 
 #### BNRSSFeedItemEnclosure
 
-An 'NSDictionary' subclass that has property for `url`, `length`, and `type`.
+An `NSDictionary` subclass that has property for `url`, `length`, and `type`.
 
 ### Podcasts
 
@@ -59,3 +59,7 @@ The podcast subclasses simply provide more specific interfaces for some properti
 ### Caveats
 
 While the parser class doesn't generally care about the data in the feed, the object classes do. If a feed includes dates that are not formatted according to the RSS spec, the object properties will fail. If an item includes multiple enclosures, the object will simply return the first one.
+
+`BNRSSFeedParser` will call the `failure` block when `parser:parseErrorOccurred:` is called. According to `NSXMLParser` documentation, when `abortParsing` is invoked, `parser:parseErrorOccurred:` should get called. If a `pubDate` is passed in, and causes parsing to stop, `abortParsing` *is* called. It does not appear, though, that this causes `parser:parseErrorOccurred:` to get called.
+
+The appropriate behavior of `BNRSSFeedParser` is: if parsing is stopped because of a `pubDate`, the `success` block *should* get called, and the `failure` block ***should not*** get called. If the behavior of `abortParsing` changes in the future (such as to match the current documentation), these expecations may not be met.

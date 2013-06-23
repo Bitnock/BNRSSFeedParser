@@ -31,16 +31,7 @@
 
 NSString *const kXMLReaderTextNodeKey2 = @"_text";
 
-@interface BNPodcastFeedParser () {
-//  NSMutableArray* _parsedElementStack;
-//  NSMutableString* _currentElementCharacters;
-//  NSDate* _abortAtPubDate;
-}
-
-//@property (nonatomic, strong) NSHTTPURLResponse* operationResponse;
-//
-//@property (nonatomic, copy) void (^successBlock)(NSHTTPURLResponse*, BNPodcastFeed*);
-//@property (nonatomic, copy) void (^failureBlock)(NSHTTPURLResponse*, NSError*);
+@interface BNPodcastFeedParser ()
 
 @end
 
