@@ -80,7 +80,7 @@ static NSDateFormatter* dateFormatterAlt = nil;
   
   _abortAtPubDate = pubDate;
 
-  [BNRSSFeedURLSessionManager.sharedManager.session dataTaskWithRequest:request completionHandler:^(NSData* data, NSURLResponse* response, NSError* error) {
+  NSURLSessionDataTask* task = [BNRSSFeedURLSessionManager.sharedManager.session dataTaskWithRequest:request completionHandler:^(NSData* data, NSURLResponse* response, NSError* error) {
     if ([response isKindOfClass:NSHTTPURLResponse.class]) {
       self.operationResponse = (NSHTTPURLResponse*)response;
       
@@ -99,6 +99,8 @@ static NSDateFormatter* dateFormatterAlt = nil;
       }
     }
   }];
+  
+  [task resume];
 }
 
 #pragma mark - XML parser delegate

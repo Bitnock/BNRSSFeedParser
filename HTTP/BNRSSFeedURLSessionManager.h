@@ -28,7 +28,7 @@
 
 @interface BNRSSFeedURLSessionManager : NSObject <NSURLSessionDelegate, NSURLSessionDataDelegate>
 
-+ (BNRSSFeedURLSessionManager*)sharedManager;
++ (instancetype)sharedManager;
 
 @property (nonatomic, strong) NSURLSession* session;
 

@@ -29,16 +29,17 @@
 
 @implementation BNRSSFeedURLSessionManager
 
-static BNRSSFeedURLSessionManager* sharedManager;
-
-+ (BNRSSFeedURLSessionManager*)sharedManager {
-  @synchronized(self) {
-    if (sharedManager == nil) {
-      sharedManager = self.new;
-    }
-  }
++ (instancetype)sharedManager {
+  static dispatch_once_t pred;
+  static id sharedManagerInstance = nil;
   
-  return sharedManager;
+  dispatch_once(&pred, ^{
+    if (!sharedManagerInstance) {
+      sharedManagerInstance = self.new;
+    }
+  });
+  
+  return sharedManagerInstance;
 }
 
 - (id)init {
