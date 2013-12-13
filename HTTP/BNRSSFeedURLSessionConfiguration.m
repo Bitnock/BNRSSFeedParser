@@ -32,6 +32,7 @@
   NSURLSessionConfiguration* configuration = NSURLSessionConfiguration.defaultSessionConfiguration;
   
   configuration.requestCachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
+  configuration.timeoutIntervalForResource = 8;
   
   return configuration;
 }
