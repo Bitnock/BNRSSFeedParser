@@ -27,8 +27,6 @@
 #import "BNPodcastFeedParser.h"
 #import "BNPodcastFeed.h"
 
-#import "AFXMLRequestOperation.h"
-
 NSString *const kXMLReaderTextNodeKey2 = @"_text";
 
 @interface BNPodcastFeedParser ()
