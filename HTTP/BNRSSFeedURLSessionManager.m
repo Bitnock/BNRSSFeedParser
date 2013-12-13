@@ -27,6 +27,12 @@
 #import "BNRSSFeedURLSessionManager.h"
 #import "BNRSSFeedURLSessionConfiguration.h"
 
+@interface BNRSSFeedURLSessionManager ()
+
+@property (nonatomic, strong) NSOperationQueue* queue;
+
+@end
+
 @implementation BNRSSFeedURLSessionManager
 
 + (instancetype)sharedManager {
@@ -45,17 +51,20 @@
 - (id)init {
   self = [super init];
   if (self) {
-    self.session = [NSURLSession sessionWithConfiguration:BNRSSFeedURLSessionConfiguration.defaultSessionConfiguration
+    _session = [NSURLSession sessionWithConfiguration:BNRSSFeedURLSessionConfiguration.defaultSessionConfiguration
                                                  delegate:self
                                             delegateQueue:NSOperationQueue.mainQueue];
   }
   return self;
 }
 
-#pragma mark - NSURLSessionTaskDelegate
-
-- (void)URLSession:(NSURLSession*)session task:(NSURLSessionTask*)task didCompleteWithError:(NSError*)error {
-  NSLog(@"=== TASK DID COMPLETE");
+- (NSOperationQueue*)queue {
+  if (!_queue) {
+    _queue = [[NSOperationQueue alloc] init];
+    [_queue setMaxConcurrentOperationCount:5];
+  }
+  
+  return _queue;
 }
 
 @end

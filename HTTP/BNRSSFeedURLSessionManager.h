@@ -26,10 +26,10 @@
 
 #import <Foundation/Foundation.h>
 
-@interface BNRSSFeedURLSessionManager : NSObject <NSURLSessionDelegate, NSURLSessionDataDelegate>
+@interface BNRSSFeedURLSessionManager : NSObject <NSURLSessionDataDelegate>
 
 + (instancetype)sharedManager;
 
-@property (nonatomic, strong) NSURLSession* session;
+@property (nonatomic, strong, readonly) NSURLSession* session;
 
 @end
