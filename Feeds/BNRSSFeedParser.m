@@ -98,6 +98,10 @@ static NSDateFormatter* dateFormatterAlt = nil;
       } else {
         failure(self.operationResponse, error);
       }
+    } else {
+      if (failure) {
+        failure(nil, error);
+      }
     }
   }];
   
@@ -195,6 +199,7 @@ static NSDateFormatter* dateFormatterAlt = nil;
 - (void)parserDidEndDocument:(NSXMLParser*)parser {
   if (self.successBlock) {
     self.successBlock(self.operationResponse, self.feed);
+    self.successBlock = nil;
   }
 }
 
@@ -202,6 +207,7 @@ static NSDateFormatter* dateFormatterAlt = nil;
   if (parseError.code == NSXMLParserDelegateAbortedParseError) {
     if (self.successBlock) {
       self.successBlock(self.operationResponse, self.feed);
+      self.successBlock = nil;
     }
     
     return;
@@ -209,6 +215,7 @@ static NSDateFormatter* dateFormatterAlt = nil;
   
   if (self.failureBlock) {
     self.failureBlock(self.operationResponse, parseError);
+    self.failureBlock = nil;
   }
 }
 
