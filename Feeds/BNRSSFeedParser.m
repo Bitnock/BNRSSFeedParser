@@ -173,7 +173,6 @@ static NSDateFormatter* dateFormatterAlt = nil;
         }
 
         [parser abortParsing];
-        [self parserDidEndDocument:parser];
       }
     }
   }
@@ -200,6 +199,14 @@ static NSDateFormatter* dateFormatterAlt = nil;
 }
 
 - (void)parser:(NSXMLParser*)parser parseErrorOccurred:(NSError*)parseError {
+  if (parseError.code == NSXMLParserDelegateAbortedParseError) {
+    if (self.successBlock) {
+      self.successBlock(self.operationResponse, self.feed);
+    }
+    
+    return;
+  }
+  
   if (self.failureBlock) {
     self.failureBlock(self.operationResponse, parseError);
   }
