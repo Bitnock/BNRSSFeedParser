@@ -90,6 +90,7 @@ static NSDateFormatter* dateFormatterAlt = nil;
         failure(self.operationResponse, error);
       } else if (data) {
         self.successBlock = success;
+        self.failureBlock = failure;
         
         NSXMLParser* XMLParser = [[NSXMLParser alloc] initWithData:data];
         XMLParser.delegate = self;
