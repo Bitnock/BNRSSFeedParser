@@ -4,6 +4,12 @@
 
 BNRSSFeedParser (and its BNPodcastFeedParser) is a one-stop shop for handling HTTP RSS resources. The parsing is quite simplistic, and does not necessarily care too much about the RSS spec. The interface for the objects that are generated try their best to adhere to the standards for their formats.
 
+##### Installation
+
+The library can be installed through CocoaPods
+
+    pod 'BNRSSFeedParser', '~> 2.1'
+
 ##### BNRSSFeedParser
 
 The feed parser class handles all of the heavy lifting. The `parseFeedURL:` method:
