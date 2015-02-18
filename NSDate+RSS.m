@@ -36,10 +36,12 @@ static NSDateFormatter* pubDateFormatterTZAbbreviation = nil;
     // ex. Tue, 02 Oct 2012 19:56:51 +0000
     pubDateFormatterTZOffset = NSDateFormatter.new;
     pubDateFormatterTZOffset.dateFormat = @"EEE, dd MMM yyyy HH:mm:ss ZZZ";
+    pubDateFormatterTZOffset.locale = [NSLocale localeWithLocaleIdentifier:@"en_US"];
     
     // ex. Tue, 02 Oct 2012 19:56:51 EDT
     pubDateFormatterTZAbbreviation = NSDateFormatter.new;
     pubDateFormatterTZAbbreviation.dateFormat = @"EEE, dd MMM yyyy HH:mm:ss zzz";
+    pubDateFormatterTZAbbreviation.locale = [NSLocale localeWithLocaleIdentifier:@"en_US"];
   }
   
   [super initialize];
