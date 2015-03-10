@@ -55,6 +55,18 @@ NSString *const kXMLReaderTextNodeKey2 = @"_text";
   [super parseFeedURL:feedURL withETag:feedETag untilPubDate:pubDate success:_successBlock failure:failure];
 }
 
+- (void)parseFeedPath:(NSString*)feedPath withETag:(NSString*)feedETag untilPubDate:(NSDate*)pubDate success:(void (^)(NSHTTPURLResponse*, BNPodcastFeed*))success failure:(void (^)(NSHTTPURLResponse*, NSError*))failure
+{
+    void (^_successBlock)(NSHTTPURLResponse*, BNRSSFeed*) = ^(NSHTTPURLResponse* response, BNRSSFeed* rssFeed){
+        if (success) {
+            BNPodcastFeed* podcastFeed = (BNPodcastFeed*)rssFeed;
+            success(response, podcastFeed);
+        }
+    };
+    
+    [super parseFeedPath:feedPath withETag:feedETag untilPubDate:pubDate success:_successBlock failure:failure];
+}
+
 - (BNPodcastFeed*)feed {
   BNRSSFeed* rssFeed = [super feed];
   
