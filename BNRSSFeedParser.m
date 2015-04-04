@@ -128,6 +128,27 @@ static NSDateFormatter* dateFormatterAlt = nil;
     }
 }
 
+
+- (void)parseFeedSource:(NSString*)source withETag:(NSString*)feedETag untilPubDate:(NSDate*)pubDate success:(void (^)(NSHTTPURLResponse*, BNRSSFeed*))success failure:(void (^)(NSHTTPURLResponse*, NSError*))failure
+{
+    _abortAtPubDate = pubDate;
+    
+    NSData *data = [source dataUsingEncoding:NSASCIIStringEncoding];
+    
+    if (data) {
+        self.successBlock = success;
+        self.failureBlock = failure;
+        //NSString *aa = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+        NSXMLParser* XMLParser = [[NSXMLParser alloc] initWithData:data];
+        XMLParser.delegate = self;
+        [XMLParser parse];
+    }
+    else {
+        NSError *error = [NSError errorWithDomain:@"file doesn't found" code:400 userInfo:nil];
+        failure(nil, error);
+    }
+}
+
 #pragma mark - XML parser delegate
 
 - (void)parserDidStartDocument:(NSXMLParser*)parser {

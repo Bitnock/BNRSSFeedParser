@@ -1,5 +1,5 @@
 //
-//  BNRSSFeedParser.h
+//  BNPodcastFeedParser.h
 //  BNRSSFeedParser
 //
 //  Created by Christopher Kalafarski on 4/2/2013.
@@ -24,18 +24,20 @@
 //  THE SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
+#import "BNRSSFeedParser.h"
 
-@class BNRSSFeed;
+@class BNPodcastFeed;
 
-@interface BNRSSFeedParser : NSObject <NSXMLParserDelegate>
+@interface BNPodcastFeedParser : BNRSSFeedParser
 
-@property (nonatomic, strong) BNRSSFeed* feed;
+- (id)initWithFeedURL:(NSURL*)feedURL withETag:(NSString*)feedETag untilPubDate:(NSDate*)pubDate success:(void (^)(NSHTTPURLResponse*, BNPodcastFeed*))success failure:(void (^)(NSHTTPURLResponse*, NSError*))failure;
 
-- (id)initWithFeedURL:(NSURL*)feedURL withETag:(NSString*)feedETag untilPubDate:(NSDate*)pubDate success:(void (^)(NSHTTPURLResponse*, BNRSSFeed*))success failure:(void (^)(NSHTTPURLResponse*, NSError*))failure;
+- (void)parseFeedURL:(NSURL*)feedURL withETag:(NSString*)feedETag untilPubDate:(NSDate*)pubDate success:(void (^)(NSHTTPURLResponse*, BNPodcastFeed*))success failure:(void (^)(NSHTTPURLResponse*, NSError*))failure;
 
-- (void)parseFeedURL:(NSURL*)feedURL withETag:(NSString*)feedETag untilPubDate:(NSDate*)pubDate success:(void (^)(NSHTTPURLResponse*, BNRSSFeed*))success failure:(void (^)(NSHTTPURLResponse*, NSError*))failure;
+- (void)parseFeedPath:(NSString*)feedPath withETag:(NSString*)feedETag untilPubDate:(NSDate*)pubDate success:(void (^)(NSHTTPURLResponse*, BNPodcastFeed*))success failure:(void (^)(NSHTTPURLResponse*, NSError*))failure;
 
-- (void)parseFeedPath:(NSString*)feedPath withETag:(NSString*)feedETag untilPubDate:(NSDate*)pubDate success:(void (^)(NSHTTPURLResponse*, BNRSSFeed*))success failure:(void (^)(NSHTTPURLResponse*, NSError*))failure;
+- (void)parseFeedSource:(NSString*)source withETag:(NSString*)feedETag untilPubDate:(NSDate*)pubDate success:(void (^)(NSHTTPURLResponse*, BNPodcastFeed*))success failure:(void (^)(NSHTTPURLResponse*, NSError*))failure;
+
+- (BNPodcastFeed*)feed;
 
 @end
