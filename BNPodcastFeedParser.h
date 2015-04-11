@@ -34,6 +34,10 @@
 
 - (void)parseFeedURL:(NSURL*)feedURL withETag:(NSString*)feedETag untilPubDate:(NSDate*)pubDate success:(void (^)(NSHTTPURLResponse*, BNPodcastFeed*))success failure:(void (^)(NSHTTPURLResponse*, NSError*))failure;
 
+- (void)parseFeedPath:(NSString*)feedPath withETag:(NSString*)feedETag untilPubDate:(NSDate*)pubDate success:(void (^)(NSHTTPURLResponse*, BNPodcastFeed*))success failure:(void (^)(NSHTTPURLResponse*, NSError*))failure;
+
+- (void)parseFeedSource:(NSString*)source withETag:(NSString*)feedETag untilPubDate:(NSDate*)pubDate success:(void (^)(NSHTTPURLResponse*, BNPodcastFeed*))success failure:(void (^)(NSHTTPURLResponse*, NSError*))failure;
+
 - (BNPodcastFeed*)feed;
 
 @end

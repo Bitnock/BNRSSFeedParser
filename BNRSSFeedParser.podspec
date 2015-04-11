@@ -8,16 +8,16 @@ Pod::Spec.new do |s|
 
                    DESC
 
-  s.homepage     = "https://github.com/Bitnock/BNRSSFeedParser"
+  s.homepage     = "https://github.com/torcelly/BNRSSFeedParser"
 
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
 
-  s.author             = { "Chris Kalafarski" => "chris@farski.com" }
-  s.social_media_url = "http://twitter.com/farski"
+  s.author             = { "Fernando Torcelly" => "fernando@torcelly.com" }
+  s.social_media_url = "http://twitter.com/torcelly"
 
   s.platform     = :ios, '7.0'
 
-  s.source       = { :git => "https://github.com/Bitnock/BNRSSFeedParser.git", :tag => "2.1.0" }
+  s.source       = { :git => "https://github.com/torcelly/BNRSSFeedParser.git", :tag => "2.1.0" }
   s.source_files = '*.{h,m}'
   s.requires_arc = true
 
