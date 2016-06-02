@@ -137,8 +137,9 @@ static NSDateFormatter* dateFormatterAlt = nil;
       
       parentElementDict[elementName] = array;
     }
-    
-    [array addObject:currentElementDict];
+      if ([elementName isEqualToString:@"item"]) {
+          [array addObject:currentElementDict];
+      }
   } else {
     parentElementDict[elementName] = currentElementDict;
   }
@@ -183,9 +184,12 @@ static NSDateFormatter* dateFormatterAlt = nil;
   
   if (_currentElementCharacters && characters.length > 0) {
     if (currentElementDict.allKeys.count == 0 && _parsedElementStack.count >= 2) {
-      NSMutableDictionary* parentDict = [_parsedElementStack objectAtIndex:(_parsedElementStack.count - 2)];
-      
-      parentDict[elementName] = characters;
+        NSMutableDictionary* parentDict = [_parsedElementStack objectAtIndex:(_parsedElementStack.count - 2)];
+        if ([parentDict[elementName] isKindOfClass:[NSMutableArray class]]) {
+            [parentDict[elementName] insertObject:characters atIndex:0];
+        } else {
+            parentDict[elementName] = characters;
+        }
     } else {
       [currentElementDict setObject:characters forKey:kXMLReaderTextNodeKey];
     }
