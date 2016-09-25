@@ -53,17 +53,21 @@ static NSDateFormatter* dateFormatter = nil;
 static NSDateFormatter* dateFormatterAlt = nil;
 
 + (void)initialize {
-  [super initialize];
-  
-  if (!dateFormatter) {
-    dateFormatter = NSDateFormatter.new;
-    dateFormatter.dateFormat = @"EEE, dd MMM yyyy HH:mm:ss ZZZ";
+  if (!pubDateFormatterTZOffset) {
+    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+
     // ex. Tue, 02 Oct 2012 19:56:51 +0000
-    
-    dateFormatterAlt = NSDateFormatter.new;
-    dateFormatterAlt.dateFormat = @"EEE, dd MMM yyyy HH:mm:ss zzz";
+    pubDateFormatterTZOffset = NSDateFormatter.new;
+    pubDateFormatterTZOffset.dateFormat = @"EEE, dd MMM yyyy HH:mm:ss ZZZ";
+    pubDateFormatterTZOffset.locale = usLocale;
+
     // ex. Tue, 02 Oct 2012 19:56:51 EDT
+    pubDateFormatterTZAbbreviation = NSDateFormatter.new;
+    pubDateFormatterTZAbbreviation.dateFormat = @"EEE, dd MMM yyyy HH:mm:ss zzz";
+    pubDateFormatterTZAbbreviation.locale = usLocale;
   }
+  
+  [super initialize];
 }
 
 - (id)initWithFeedURL:(NSURL*)feedURL withETag:(NSString*)feedETag untilPubDate:(NSDate*)pubDate success:(void (^)(NSHTTPURLResponse*, BNRSSFeed*))success failure:(void (^)(NSHTTPURLResponse*, NSError*))failure {
